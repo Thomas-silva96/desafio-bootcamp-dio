@@ -31,11 +31,6 @@ public class Dev {
             soma += next;
         }
         return soma;
-
-        /*return this.conteudosConcluidos
-                .stream()
-                .mapToDouble(Conteudo::calcularXp)
-                .sum();*/
     }
 
 

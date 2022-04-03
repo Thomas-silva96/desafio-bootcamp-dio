@@ -6,60 +6,104 @@ import com.tsdroiddevelop.dominio.Dev;
 import com.tsdroiddevelop.dominio.Mentoria;
 
 import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class Main {
 
+    static Scanner sc;
+    static Bootcamp bootcamp;
+    static Dev dev;
+
     public static void main(String[] args) {
+        sc = new Scanner(System.in);
+        bootcamp = new Bootcamp();
+        dev = new Dev();
+        String menuCurso = "n";
+        int cm;
 
-        Curso curso1 = new Curso();
-        curso1.setTitulo("curso java");
-        curso1.setDescricao("descrição curso java");
-        curso1.setCargaHoraria(8);
-
-        Curso curso2 = new Curso();
-        curso2.setTitulo("curso js");
-        curso2.setDescricao("descrição curso js");
-        curso2.setCargaHoraria(4);
-
-        Mentoria mentoria = new Mentoria();
-        mentoria.setTitulo("mentoria de java");
-        mentoria.setDescricao("descrição mentoria java");
-        mentoria.setData(LocalDate.now());
-
-        /*System.out.println(curso1);
-        System.out.println(curso2);
-        System.out.println(mentoria);*/
-
-        Bootcamp bootcamp = new Bootcamp();
         bootcamp.setNome("Bootcamp Java Developer");
         bootcamp.setDescricao("Descrição Bootcamp Java Developer");
-        bootcamp.getConteudos().add(curso1);
-        bootcamp.getConteudos().add(curso2);
+        do {
+            System.out.println("Deseja criar: 1- Curso / 2- Mentoria");
+            cm = sc.nextInt();
+            sc.nextLine();
+
+            if (cm == 1){
+                criarCurso();
+                System.out.println("Finalizar a criacao de cursos e mentoria: s - sim / n - nao");
+                menuCurso = sc.nextLine();
+            }
+            else if (cm == 2){
+                criarMentoria();
+                System.out.println("Finalizar a criacao de cursos e mentoria: s - sim / n - nao");
+                menuCurso = sc.nextLine();
+            }
+            else{
+                System.out.println("Opcao invalida!");
+            }
+
+        }while (Objects.equals(menuCurso, "n"));
+
+        criarDev();
+        boolean estudar = true;
+
+        while (estudar){
+            System.out.println("\n\n-");
+            System.out.println("Conteúdos Inscritos " + dev.getConteudosInscritos());
+            System.out.println("\n\n");
+            estudar = menuEstuda();
+        }
+
+        System.out.println("\n\n\n\n" + dev.getNome() + " O SEU PROGRESSO FOI:\n");
+
+        System.out.println("Conteúdos Inscritos:" + dev.getConteudosInscritos());
+        System.out.println("Conteúdos Concluídos:" + dev.getConteudosConcluidos());
+        System.out.println("XP:" + dev.calcularTotalXp());
+
+    }
+
+    private static boolean menuEstuda() {
+        System.out.println("Continuar estudando digite 1, para sair digite 0.");
+        int i = sc.nextInt();
+        sc.nextLine();
+        if (i == 1) {
+            dev.progredir();
+            return true;
+        }
+        else return false;
+    }
+
+    public static void criarCurso() {
+        Curso curso = new Curso();
+        System.out.println("Por favor digite o nome do curso:");
+        curso.setTitulo(sc.nextLine());
+        System.out.println("Por favor digite a descricao do curso:");
+        curso.setDescricao(sc.nextLine());
+        System.out.println("Por favor digite a carga horaria do curso:");
+        curso.setCargaHoraria(sc.nextInt());
+        sc.nextLine();
+
+        System.out.println("Curso criado com sucesso:");
+        bootcamp.getConteudos().add(curso);
+
+    }
+
+    public static void criarMentoria () {
+        Mentoria mentoria = new Mentoria();
+        System.out.println("Por favor digite o nome da mentoria:");
+        mentoria.setTitulo(sc.nextLine());
+        System.out.println("Por favor digite a descricao da mentoria:");
+        mentoria.setDescricao(sc.nextLine());
+        mentoria.setData(LocalDate.now());
+
+        System.out.println("Mentoria criada com sucesso:");
         bootcamp.getConteudos().add(mentoria);
+    }
 
-        Dev devCamila = new Dev();
-        devCamila.setNome("Camila");
-        devCamila.inscreverBootcamp(bootcamp);
-        System.out.println("Conteúdos Inscritos Camila:" + devCamila.getConteudosInscritos());
-        devCamila.progredir();
-        devCamila.progredir();
-        System.out.println("-");
-        System.out.println("Conteúdos Inscritos Camila:" + devCamila.getConteudosInscritos());
-        System.out.println("Conteúdos Concluídos Camila:" + devCamila.getConteudosConcluidos());
-        System.out.println("XP:" + devCamila.calcularTotalXp());
-
-        System.out.println("-------");
-
-        Dev devJoao = new Dev();
-        devJoao.setNome("Joao");
-        devJoao.inscreverBootcamp(bootcamp);
-        System.out.println("Conteúdos Inscritos João:" + devJoao.getConteudosInscritos());
-        devJoao.progredir();
-        devJoao.progredir();
-        devJoao.progredir();
-        System.out.println("-");
-        System.out.println("Conteúdos Inscritos João:" + devJoao.getConteudosInscritos());
-        System.out.println("Conteúdos Concluidos João:" + devJoao.getConteudosConcluidos());
-        System.out.println("XP:" + devJoao.calcularTotalXp());
+    public static void criarDev () {
+        System.out.println("Por favor digite o seu nome:");
+        dev.setNome(sc.nextLine());
+        dev.inscreverBootcamp(bootcamp);
     }
 }
